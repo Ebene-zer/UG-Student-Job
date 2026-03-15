@@ -49,12 +49,48 @@ This project aims to design and develop a web-based job marketplace specifically
 
 
 ## 4. Project Structure
-The platform is built using the Django framework.
-- `manage.py`: Django's command-line utility for administrative tasks.
-- `ugjobs/`: Main project configuration directory (settings, urls, wsgi/asgi).
-- `users/`: Django app managing user registration, authentication, and profiles.
-- `requirements.txt`: Project dependencies list.
-- `.env_example.py`: Environment variables template (copy this to `.env` or set manually).
+
+````UG-Student-Job/
+├── manage.py
+├── ugjobs/
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── users/ User, Role, UserRole, StudentProfile, EmployerVerification
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── views.py
+│   └── urls.py
+├── jobs/ Job, JobLocation, JobCategory, JobCategoryMap, JobSkill, Skill
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── views.py
+│   └── urls.py
+├── applications/ Application, ApplicationStatusHistory, InterviewSchedule, CV, StudentSkill
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── views.py
+│   └── urls.py
+├── core/Notification, SavedJob, AuditLog
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── views.py
+│   └── urls.py
+├── requirements.txt
+└── .env_example.py
+└── .gitignore
+└── README.md
+
+````
 
 ## 5. Setup and Installation
 
