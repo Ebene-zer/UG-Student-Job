@@ -1,11 +1,9 @@
 from django.db import models
-from users.models import User, StudentProfile
-from jobs.models import Job, Skill
 
 # Create your models here.
 class CV(models.Model):
     student = models.ForeignKey(
-        StudentProfile, 
+        'users.StudentProfile', 
         on_delete=models.CASCADE,
         related_name='cvs'
     )
@@ -19,13 +17,14 @@ class CV(models.Model):
 
 class StudentSkill(models.Model):
     student = models.ForeignKey(
-        StudentProfile, 
+        'users.StudentProfile', 
         on_delete=models.CASCADE,
         related_name='skills'
     )
     skill = models.ForeignKey(
-        Skill, 
+        'jobs.Skill',
         on_delete=models.CASCADE,
+        related_name='student_skills',
     )
 
     def __str__(self):
@@ -34,17 +33,17 @@ class StudentSkill(models.Model):
 
 class Application(models.Model):
     student = models.ForeignKey(
-        StudentProfile, 
+        'users.StudentProfile', 
         on_delete=models.CASCADE,
         related_name='applications'
     )
     job = models.ForeignKey(
-        Job, 
+        'jobs.Job', 
         on_delete=models.CASCADE,
         related_name='applications'
     )
     cv = models.ForeignKey(
-        CV, 
+        'applications.CV', 
         on_delete=models.SET_NULL,
         null=True,
         blank=True
