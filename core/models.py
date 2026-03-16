@@ -1,9 +1,10 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 class Notification(models.Model):
     user = models.ForeignKey(
-        'users.User',
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='notifications'
     )
@@ -39,7 +40,7 @@ class SavedJob(models.Model):
 
 class Report(models.Model):
     user = models.ForeignKey(
-        'users.User',
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='reports'
     )
@@ -56,7 +57,7 @@ class Report(models.Model):
 
 class AuditLog(models.Model):
     user = models.ForeignKey(
-        'users.User',
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='audit_logs'
     )
