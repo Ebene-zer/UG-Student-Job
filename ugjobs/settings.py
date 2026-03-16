@@ -39,8 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
+    'jobs',
     'applications',
-    'rest_framework',
+    'core',
 ]
 
 MIDDLEWARE = [
@@ -125,4 +126,4 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-#DATABASE_URL='sqlite://db.sqlite3'
+AUTH_USER_MODEL = 'users.User'
