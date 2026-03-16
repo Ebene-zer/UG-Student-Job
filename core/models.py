@@ -1,12 +1,9 @@
 from django.db import models
-from users.models import User, StudentProfile
-from jobs.models import Job
-from applications.models import Application
 
 # Create your models here.
 class Notification(models.Model):
     user = models.ForeignKey(
-        User,
+        'users.User',
         on_delete=models.CASCADE,
         related_name='notifications'
     )
@@ -23,14 +20,15 @@ class Notification(models.Model):
 
 class SavedJob(models.Model):
     student = models.ForeignKey(
-        StudentProfile,
+        'users.StudentProfile',
         on_delete=models.CASCADE,
         related_name="saved_jobs"
     )
 
     job = models.ForeignKey(
-        Job,
-        on_delete=models.CASCADE
+        'jobs.Job',
+        on_delete=models.CASCADE,
+        related_name='saved_by_students'
     )
 
     saved_at = models.DateTimeField(auto_now_add=True)
@@ -41,8 +39,9 @@ class SavedJob(models.Model):
 
 class Report(models.Model):
     user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE
+        'users.User',
+        on_delete=models.CASCADE,
+        related_name='reports'
     )
 
     description = models.TextField()
@@ -57,8 +56,9 @@ class Report(models.Model):
 
 class AuditLog(models.Model):
     user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE
+        'users.User',
+        on_delete=models.CASCADE,
+        related_name='audit_logs'
     )
 
     action = models.CharField(max_length=255)

@@ -1,5 +1,4 @@
 from django.db import models
-from users.models import User, Employer
 
 # Create your models here.
 class JobCategory(models.Model):
@@ -26,8 +25,8 @@ class Job(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     employer = models.ForeignKey(
-        Employer,
-        on_delete=models.CASCADE, 
+        'users.Employer',
+        on_delete=models.CASCADE,
         related_name='jobs'
     )
     
@@ -36,11 +35,14 @@ class Job(models.Model):
         blank=True
     )
     
+    # allow reverse access from JobLocation to jobs at that location
+    # use a distinct related_name to avoid collisions
     location = models.ForeignKey(
         JobLocation,
         on_delete=models.SET_NULL,
         null=True,
-        blank=True
+        blank=True,
+        related_name='jobs_at_location'
     )
 
     skills = models.ManyToManyField(
