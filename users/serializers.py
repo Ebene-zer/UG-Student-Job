@@ -86,3 +86,22 @@ class RegisterSerializer(serializers.ModelSerializer):
             Employer.objects.create(user=user, **employer_data)
 
         return user
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(required=False, allow_blank=True)
+    email = serializers.EmailField(required=False, allow_blank=True)
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        username = attrs.get('username')
+        email = attrs.get('email')
+        password = attrs.get('password')
+
+        if not password:
+            raise serializers.ValidationError('Password is required')
+
+        if not username and not email:
+            raise serializers.ValidationError('Either username or email is required')
+
+        return attrs

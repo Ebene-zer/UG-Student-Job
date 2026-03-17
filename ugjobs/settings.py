@@ -1,4 +1,5 @@
 from decouple import config
+from datetime import timedelta
 """
 Django settings for ugjobs project.
 
@@ -131,7 +132,29 @@ AUTH_USER_MODEL = 'users.User'
 
 
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": [
-        'rest_framework.permissions.AllowAny'
-    ]
+
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.AllowAny",
+    ),
+
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "10/min",
+        "user": "50/min",
+    },
 }
+
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
+
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+]
