@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import User, Skill, StudentProfile, Employer, EmployerVerification, CV, Notification, Report, AuditLog
+from .models import User, StudentProfile, Employer, Role
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'role', 'first_name', 'last_name', 'password']
+         fields = ['id', 'username', 'email', 'role', 'first_name', 'last_name', 'password']
         extra_kwargs = {'password': {'write_only': True}}
         
     def create(self, validated_data):
@@ -15,50 +15,17 @@ class UserSerializer(serializers.ModelSerializer):
             user.save()
         return user
 
-class SkillSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Skill
-        fields = '__all__'
-
 class StudentProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
-    skills = SkillSerializer(many=True, read_only=True)
-    skill_ids = serializers.PrimaryKeyRelatedField(
-        many=True, write_only=True, queryset=Skill.objects.all(), source='skills', required=False
-    )
-
     class Meta:
         model = StudentProfile
-        fields = ['id', 'user', 'student_id', 'program', 'year_of_study', 'skills', 'skill_ids']
+        fields = "__all__"
 
 class EmployerSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
-    
     class Meta:
         model = Employer
-        fields = ['id', 'user', 'company_name', 'company_type', 'description']
+        fields = "__all__"
 
-class EmployerVerificationSerializer(serializers.ModelSerializer):
+class RoleSerializer(serializers.ModelSerializer):
     class Meta:
-        model = EmployerVerification
-        fields = '__all__'
-
-class CVSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CV
-        fields = '__all__'
-
-class NotificationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Notification
-        fields = '__all__'
-
-class ReportSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Report
-        fields = '__all__'
-
-class AuditLogSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AuditLog
-        fields = '__all__'
+        model = Role
+        fields = "__all__"
