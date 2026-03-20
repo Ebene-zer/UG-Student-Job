@@ -65,7 +65,7 @@ class LoginView(APIView):
 
         if user is None:
             return Response(
-                {"detail": "Invalid credentials"},
+                {"detail": "Invalid credentials. User may not exist."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 

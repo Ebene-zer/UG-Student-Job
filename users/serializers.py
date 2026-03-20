@@ -17,13 +17,14 @@ class UserSerializer(serializers.ModelSerializer):
             user.save()
         return user
 
-    def update(self, instance, validated_data):
-        password = validated_data.pop('password', None)
-        user = super().update(instance, validated_data)
-        if password:
-            user.set_password(password)
-            user.save()
-        return user
+    #Used to update already existing user, but not currently used in the project. Kept for future use.
+    # def update(self, instance, validated_data):
+    #     password = validated_data.pop('password', None)
+    #     user = super().update(instance, validated_data)
+    #     if password:
+    #         user.set_password(password)
+    #         user.save()
+    #     return user
 
 class StudentProfileSerializer(serializers.ModelSerializer):
     class Meta:
