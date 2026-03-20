@@ -5,7 +5,6 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 from django.contrib.auth import authenticate
-
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User
@@ -65,7 +64,7 @@ class LoginView(APIView):
 
         if user is None:
             return Response(
-                {"detail": "Invalid credentials"},
+                {"detail": "Invalid credentials. User may not exist."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -75,7 +74,7 @@ class LoginView(APIView):
             "id": user.id, # type: ignore
             "username": user.username,
             "email": user.email,
-            "role": user.role.name if hasattr(user, "role") and user.role else None, # type: ignore
+            "role": user.role.name if user.role else None # type: ignore
         }
 
         
