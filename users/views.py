@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -9,6 +8,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User, StudentProfile, Employer
 from .serializers import *
+from .permissions import *
 
 
 # User list (Admin only)
@@ -89,17 +89,9 @@ class MeView(APIView):
 
 
 class StudentProfileView(APIView):
-
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsStudent]
 
     def get(self, request):
-
-        if request.user.role.name != "student":
-            return Response(
-                {"detail": "Only students allowed"},
-                status=403,
-            )
-
         profile = StudentProfile.objects.filter(user=request.user).first()
 
         if not profile:
@@ -113,13 +105,6 @@ class StudentProfileView(APIView):
 
 
     def post(self, request):
-
-        if request.user.role.name != "student":
-            return Response(
-                {"detail": "Only students allowed"},
-                status=403,
-            )
-
         if StudentProfile.objects.filter(user=request.user).exists():
             return Response(
                 {"detail": "Profile already exists"},
@@ -136,13 +121,6 @@ class StudentProfileView(APIView):
 
 
     def put(self, request):
-
-        if request.user.role.name != "student":
-            return Response(
-                {"detail": "Only students allowed"},
-                status=403,
-            )
-
         profile = StudentProfile.objects.filter(user=request.user).first()
 
         if not profile:
@@ -165,17 +143,9 @@ class StudentProfileView(APIView):
     
 
 class EmployerProfileView(APIView):
-
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsEmployer]
 
     def get(self, request):
-
-        if request.user.role.name != "employer":
-            return Response(
-                {"detail": "Only employers allowed"},
-                status=403,
-            )
-
         profile = Employer.objects.filter(user=request.user).first()
 
         if not profile:
@@ -189,13 +159,6 @@ class EmployerProfileView(APIView):
 
 
     def post(self, request):
-
-        if request.user.role.name != "employer":
-            return Response(
-                {"detail": "Only employers allowed"},
-                status=403,
-            )
-
         if Employer.objects.filter(user=request.user).exists():
             return Response(
                 {"detail": "Profile already exists"},
@@ -212,13 +175,6 @@ class EmployerProfileView(APIView):
 
 
     def put(self, request):
-
-        if request.user.role.name != "employer":
-            return Response(
-                {"detail": "Only employers allowed"},
-                status=403,
-            )
-
         profile = Employer.objects.filter(user=request.user).first()
 
         if not profile:

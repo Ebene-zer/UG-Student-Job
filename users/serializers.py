@@ -63,6 +63,16 @@ class RegisterSerializer(serializers.ModelSerializer):
             "role",
         )
 
+
+    def validate_role(self, value):
+
+        if value.name == "admin":
+            raise serializers.ValidationError(
+                "Admin cannot be registered"
+            )
+
+        return value
+
     def create(self, validated_data):
 
         role = validated_data.pop("role")
