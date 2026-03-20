@@ -43,48 +43,33 @@ class RoleSerializer(serializers.ModelSerializer):
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    student_profile = StudentProfileSerializer(required=False)
-    employer_profile = EmployerSerializer(required=False)
-    role = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all(), many=True, required=False)
+
+    role = serializers.PrimaryKeyRelatedField(
+        queryset=Role.objects.all(),
+        required=True
+    )
+
+    password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
         fields = (
-            'id', 'username', 'email', 'password', 'is_student', 'is_employer',
-            'role', 'student_profile', 'employer_profile',
+            "id",
+            "username",
+            "email",
+            "password",
+            "role",
         )
-        extra_kwargs = {
-            'password': {'write_only': True},
-        }
 
     def create(self, validated_data):
-        roles = validated_data.pop('role', [])
-        student_data = validated_data.pop('student_profile', None)
-        employer_data = validated_data.pop('employer_profile', None)
-        password = validated_data.pop('password', None)
+
+        role = validated_data.pop("role")
+        password = validated_data.pop("password")
 
         user = User(**validated_data)
-        if password:
-            user.set_password(password)
-        else:
-            user.set_unusable_password()
+        user.role = role
+        user.set_password(password)
         user.save()
-
-        if roles:
-            user.role.set(roles)
-
-        # create related profiles when indicated
-        if user.is_student and student_data:
-            # remove any nested user/id keys that may have been sent
-            student_data.pop('user', None)
-            student_data.pop('id', None)
-            StudentProfile.objects.create(user=user, **student_data)
-
-        if user.is_employer and employer_data:
-            # remove any nested user/id keys that may have been sent
-            employer_data.pop('user', None)
-            employer_data.pop('id', None)
-            Employer.objects.create(user=user, **employer_data)
 
         return user
 

@@ -3,31 +3,37 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
-class User(AbstractUser):
-    email = models.EmailField(unique=True)
-
-    is_student = models.BooleanField(default=False)
-    is_employer = models.BooleanField(default=False)
-
-    #link role to user
-    role = models.ManyToManyField('Role', blank=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.username
 
 class Role(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.name
-    
+  
+
+class User(AbstractUser):
+    email = models.EmailField(unique=True)
+
+    role = models.ForeignKey(
+        Role,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="users"
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.username
+
+  
 
 class StudentProfile(models.Model):
     user = models.OneToOneField(
         User, 
-        on_delete=models.CASCADE, related_name='student_profile'
+        on_delete=models.CASCADE, 
+        related_name='student_profile'
     )
 
     full_name = models.CharField(max_length=150)
