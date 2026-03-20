@@ -6,3 +6,4 @@
 # DB_PASSWORD='the db password'
 # DB_HOST='the db host'
 # DB_PORT='the db port'
+#DEBUG=True

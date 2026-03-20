@@ -29,7 +29,7 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view()),
 
 
-    path('api/', include('jobs.urls')),
-    path('api/', include('applications.urls')),
-    path('api/', include('core.urls')),
+    path('api/jobs/', include('jobs.urls')),
+    path('api/applications/', include('applications.urls')),
+    path('api/core/', include('core.urls')),
 ]

@@ -1,6 +1,8 @@
 from django.urls import path
 from .views import ApplicationListView
+from core.views import placeholder
 
 urlpatterns = [
-    path('applications/', ApplicationListView.as_view()),
+    path('', lambda request: placeholder(request, "Applications"), name='applications-placeholder'),  # Placeholder view for the base URL
+    # path('applications/', ApplicationListView.as_view()),
 ]
