@@ -30,11 +30,13 @@ class StudentProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentProfile
         fields = "__all__"
+        read_only_fields = ['user']
 
 class EmployerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employer
         fields = "__all__"
+        read_only_fields = ['user']
 
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
@@ -60,6 +62,16 @@ class RegisterSerializer(serializers.ModelSerializer):
             "password",
             "role",
         )
+
+
+    def validate_role(self, value):
+
+        if value.name == "admin":
+            raise serializers.ValidationError(
+                "Admin cannot be registered"
+            )
+
+        return value
 
     def create(self, validated_data):
 
@@ -91,3 +103,16 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError('Either username or email is required')
 
         return attrs
+
+
+class MeSerialzer(serializers.ModelSerializer):
+    role = serializers.CharField(source='role.name', read_only=True)
+
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "username",
+            "email",
+            "role",
+        )
