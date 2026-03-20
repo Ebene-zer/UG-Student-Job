@@ -91,3 +91,16 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError('Either username or email is required')
 
         return attrs
+
+
+class MeSerialzer(serializers.ModelSerializer):
+    role = serializers.CharField(source='role.name', read_only=True)
+
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "username",
+            "email",
+            "role",
+        )
