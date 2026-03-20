@@ -7,9 +7,8 @@ from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import User, StudentProfile
-from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, MeSerialzer, StudentProfileSerializer
-
+from .models import User, StudentProfile, Employer
+from .serializers import *
 
 
 # User list (Admin only)
@@ -153,6 +152,82 @@ class StudentProfileView(APIView):
             )
 
         serializer = StudentProfileSerializer(
+            profile,
+            data=request.data,
+            partial=True,
+        )
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=400)
+    
+
+class EmployerProfileView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        if request.user.role.name != "employer":
+            return Response(
+                {"detail": "Only employers allowed"},
+                status=403,
+            )
+
+        profile = Employer.objects.filter(user=request.user).first()
+
+        if not profile:
+            return Response(
+                {"detail": "Profile not found"},
+                status=404,
+            )
+
+        serializer = EmployerSerializer(profile)
+        return Response(serializer.data)
+
+
+    def post(self, request):
+
+        if request.user.role.name != "employer":
+            return Response(
+                {"detail": "Only employers allowed"},
+                status=403,
+            )
+
+        if Employer.objects.filter(user=request.user).exists():
+            return Response(
+                {"detail": "Profile already exists"},
+                status=400,
+            )
+
+        serializer = EmployerSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=201)
+
+        return Response(serializer.errors, status=400)
+
+
+    def put(self, request):
+
+        if request.user.role.name != "employer":
+            return Response(
+                {"detail": "Only employers allowed"},
+                status=403,
+            )
+
+        profile = Employer.objects.filter(user=request.user).first()
+
+        if not profile:
+            return Response(
+                {"detail": "Profile not found"},
+                status=404,
+            )
+
+        serializer = EmployerSerializer(
             profile,
             data=request.data,
             partial=True,

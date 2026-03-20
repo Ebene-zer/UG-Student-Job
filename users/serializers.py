@@ -36,6 +36,7 @@ class EmployerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employer
         fields = "__all__"
+        read_only_fields = ['user']
 
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
