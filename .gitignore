@@ -5,3 +5,7 @@ db.sqlite3
 .env
 cvs/
 .DS_Store
+env/
+venv/
+/env
+
