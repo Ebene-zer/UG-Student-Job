@@ -9,9 +9,11 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User, StudentProfile, Employer
 from .serializers import *
 from .permissions import *
+from .schemas import *
 
 
 # User list (Admin only)
+@user_list_schema
 class UserListView(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -20,6 +22,7 @@ class UserListView(generics.ListCreateAPIView):
 
 
 # Register
+@register_schema
 class RegisterView(generics.CreateAPIView):
     """Register a new user"""
     serializer_class = RegisterSerializer
@@ -28,10 +31,11 @@ class RegisterView(generics.CreateAPIView):
 
 
 # Login with JWT
+@login_schema
 class LoginView(APIView):
-
     permission_classes = [AllowAny]
     throttle_classes = [AnonRateThrottle, UserRateThrottle]
+    serializer_class = LoginSerializer
 
     def post(self, request, *args, **kwargs):
 
@@ -80,16 +84,22 @@ class LoginView(APIView):
         return Response(resp, status=status.HTTP_200_OK)
     
 
-class MeView(APIView):
+@me_schema
+class MeView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = MeSerialzer
 
     def get(self, request):
         serializer = MeSerialzer(request.user)
         return Response(serializer.data)
 
 
-class StudentProfileView(APIView):
+@student_profile_get_schema
+@student_profile_post_schema
+@student_profile_put_schema
+class StudentProfileView(generics.GenericAPIView):
     permission_classes = [IsStudent]
+    serializer_class = StudentProfileSerializer
 
     def get(self, request):
         profile = StudentProfile.objects.filter(user=request.user).first()
@@ -142,8 +152,12 @@ class StudentProfileView(APIView):
         return Response(serializer.errors, status=400)
     
 
-class EmployerProfileView(APIView):
+@employer_profile_get_schema
+@employer_profile_post_schema
+@employer_profile_put_schema
+class EmployerProfileView(generics.GenericAPIView):
     permission_classes = [IsEmployer]
+    serializer_class = EmployerSerializer
 
     def get(self, request):
         profile = Employer.objects.filter(user=request.user).first()

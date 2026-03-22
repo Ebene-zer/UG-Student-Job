@@ -49,7 +49,10 @@ INSTALLED_APPS = [
     'core',
     'rest_framework',
     'whitenoise.runserver_nostatic',
+    'drf_spectacular'
 ]
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -167,7 +170,9 @@ REST_FRAMEWORK = {
         "anon": "10/min",
         "user": "50/min",
     },
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
 }
+
 
 
 SIMPLE_JWT = {
@@ -185,3 +190,28 @@ AUTHENTICATION_BACKENDS = [
 CSRF_TRUSTED_ORIGINS = [
     "https://*.onrender.com",
 ]
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'UG CareerLink API',
+    'DESCRIPTION': 'API for the DCIT 317 PROJECT (UG CareerLink). A platform to assist students in finding part-time jobs and internships.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'TAGGING': False,  # Disable auto-tagging to use custom tags from extend_schema
+    'COMPONENT_SPLIT_REQUEST': True,  # Split request/response components for better readability
+    'SWAGGER_UI_SETTINGS': {
+        'persistAuthorization': True,  # Persist auth tokens in Swagger UI
+        'displayRequestDuration': True,
+    },
+    'SECURITY': [
+        {'Bearer': []},  # Define JWT security scheme
+    ],
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'JWT Authorization header using the Bearer scheme. Example: "Authorization: Bearer {token}"',
+        },
+    },
+}
