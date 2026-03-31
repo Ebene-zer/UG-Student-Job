@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'core',
     'rest_framework',
     'whitenoise.runserver_nostatic',
-    'drf_spectacular'
+    'drf_spectacular',
+    'corsheaders',
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -57,6 +58,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -190,6 +192,15 @@ AUTHENTICATION_BACKENDS = [
 CSRF_TRUSTED_ORIGINS = [
     "https://*.onrender.com",
 ]
+
+# CORS configuration
+def _cast_origins(v):
+    if not v:
+        return []
+    return [s.strip() for s in v.split(',') if s.strip()]
+
+CORS_ALLOW_ALL_ORIGINS = config('CORS_ALLOW_ALL_ORIGINS', default=False, cast=bool)
+CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', default='', cast=_cast_origins)
 
 
 SPECTACULAR_SETTINGS = {
