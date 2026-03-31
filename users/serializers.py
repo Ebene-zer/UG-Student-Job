@@ -62,6 +62,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             "password",
             "role",
         )
+        read_only_fields = ("id",)
 
 
     def validate_role(self, value):
