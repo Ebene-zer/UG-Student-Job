@@ -5,8 +5,10 @@ from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import get_user_model
+from .models import StudentProfile, Employer
 
-from .models import User, StudentProfile, Employer
+User = get_user_model()
 from .serializers import *
 from .permissions import *
 from .schemas import *
